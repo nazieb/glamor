@@ -42,7 +42,9 @@ func WrapServer(e *echo.Echo) lambdaFn {
 	}
 }
 
-func headersToMap(headers http.Header) (result map[string]string) {
+func headersToMap(headers http.Header) map[string]string {
+	result := make(map[string]string)
+
 	for key, values := range headers {
 		var resultValue string
 
@@ -55,5 +57,5 @@ func headersToMap(headers http.Header) (result map[string]string) {
 		result[key] = resultValue
 	}
 
-	return
+	return result
 }
