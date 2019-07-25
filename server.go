@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -19,6 +20,16 @@ func WrapServer(e *echo.Echo) lambdaFn {
 		req := httptest.NewRequest(request.HTTPMethod, request.Path, body)
 		for k, v := range request.Headers {
 			req.Header.Add(k, v)
+		}
+
+		query := url.Values{}
+		for k, v := range request.QueryStringParameters {
+			query.Add(k, v)
+		}
+
+		rawQuery := query.Encode()
+		if rawQuery != "" {
+			req.URL.RawQuery = rawQuery
 		}
 
 		rec := httptest.NewRecorder()
